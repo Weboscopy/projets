@@ -10,6 +10,7 @@ const categoryInput = document.getElementById("addCategoryInput")
 const submitInput = document.getElementById("submitInput")
 const form = document.querySelector("form")
 const ul = document.querySelector("ul")
+const trash  = document.querySelector(".fa-trash")
 
 const app = {
     init(){
@@ -17,6 +18,8 @@ const app = {
         listen(nameInput, "input", validateForm)
         listen(categoryInput, "input", validateForm)
         listen(form, "submit", app.addTodo)
+        listen(ul, "click", app.removeTodo)
+        listen(trash, "click", app.clearTodos)
     },
     addTodo(e){
         e.preventDefault()
@@ -26,6 +29,25 @@ const app = {
         const date = new Date()
         const item = createItem(id, name, category, date)
         todoList.addItemToList(item)
+        app.update()
+    },
+    removeTodo(e){
+        if(e.target.tagName === "I"){
+           const id = e.target.parentElement.getAttribute("id")
+           todoList.removeItemFromList(id)
+            app.update()
+        }
+    },
+    clearTodos(){
+        if(todoList.getListLength()){
+            const confirmed = confirm("Voulez-vous vraiment supprimer tous les todos ?")
+            if(confirmed){
+                todoList.clearList()
+                app.update()
+            }
+        }
+    },
+    update(){
         resetUI()
         app.refreshPage()
     },
