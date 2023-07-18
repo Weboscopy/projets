@@ -11,6 +11,7 @@ const submitInput = document.getElementById("submitInput")
 const form = document.querySelector("form")
 const ul = document.querySelector("ul")
 const trash = document.querySelector(".fa-trash")
+const statBox = document.querySelector(".stats")
 
 const app = {
     init() {
@@ -70,6 +71,8 @@ const app = {
     },
     refreshPage() {
         deleteContent(ul)
+        deleteContent(statBox)
+        renderUIStats(getStats())
         renderUIList([...todoList.getList()].reverse())
     }
 }
@@ -122,6 +125,38 @@ const buildUIItem = (item) => {
     <i class="fa fa-close"></i>
     `
     ul.appendChild(li)
+}
+
+const getStats = () => {
+    const total = todoList.getListLength()
+    let aggregate; 
+    if(total > 0 ){
+        aggregate = todoList.getList().reduce((acc, curr) => {
+            const {_category} = curr 
+            acc[_category] = acc[_category] + 1 || 1
+            return acc 
+        }, {})
+    }
+
+    return {total, aggregate}
+}
+
+const renderUIStats = (stats) => {
+    const totalDiv = document.createElement("div")
+    totalDiv.innerHTML = `
+    Total : <b>${stats.total}</b>
+    `
+    statBox.appendChild(totalDiv)
+    const aggregateDiv = document.createElement("div")
+    if(typeof stats.aggregate !== "undefined"){
+        for (let [key, value] of Object.entries(stats.aggregate)){
+            const span = document.createElement("span")
+            span.innerHTML = `${key} : ${value}`
+            aggregateDiv.appendChild(span)
+        }
+    }
+
+    statBox.appendChild(aggregateDiv)
 }
 
 
