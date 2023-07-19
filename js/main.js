@@ -2,7 +2,10 @@ import TodoItem from "./TodoItem.js"
 import TodoList from "./TodoList.js"
 import { listen, deleteContent } from "./utils.js";
 
+// state 
 const todoList = new TodoList();
+let pages; 
+let currentPage = 1
 
 // DOM 
 const nameInput = document.getElementById("addNameInput")
@@ -12,6 +15,9 @@ const form = document.querySelector("form")
 const ul = document.querySelector("ul")
 const trash = document.querySelector(".fa-trash")
 const statBox = document.querySelector(".stats")
+const pageBox = document.querySelector(".pages")
+const leftChevron = document.querySelector(".fa-chevron-left")
+const rightChevron = document.querySelector(".fa-chevron-right")
 
 const app = {
     init() {
@@ -21,6 +27,8 @@ const app = {
         listen(form, "submit", app.addTodo)
         listen(ul, "click", app.removeTodo)
         listen(trash, "click", app.clearTodos)
+        listen(leftChevron, "click", e => app.changePage("left"))
+        listen(rightChevron, "click", e => app.changePage("right"))
 
         //procédures 
         app.load()
@@ -73,7 +81,17 @@ const app = {
         deleteContent(ul)
         deleteContent(statBox)
         renderUIStats(getStats())
-        renderUIList([...todoList.getList()].reverse())
+        renderUIList(paginate([...todoList.getList()].reverse()))
+    },
+    changePage(direction){
+        if(direction === "left"){
+            if(currentPage === 1) return 
+            currentPage--
+        } else if (direction === "right"){
+            if(currentPage === pages) return 
+            currentPage++
+        }
+        app.refreshPage()
     }
 }
 
@@ -103,13 +121,14 @@ const createItem = (id, name, category, date) => {
 }
 
 const resetUI = () => {
+    currentPage = 1
     nameInput.value = ""
     categoryInput.value = ""
     submitInput.disabled = true
 }
 
 const renderUIList = (list) => {
-    list.forEach(item => {
+    list[currentPage - 1].forEach(item => {
         buildUIItem(item)
     })
 }
@@ -157,6 +176,20 @@ const renderUIStats = (stats) => {
     }
 
     statBox.appendChild(aggregateDiv)
+}
+
+const paginate = (list) => {
+    const itemsPerPage = 4; 
+    pages = list.length > 0 ? Math.ceil(list.length / itemsPerPage) : 1
+    const paginatedItems = Array.from({length: pages}, (_,i) => {
+        const start = i * itemsPerPage  
+        return list.slice(start, start + itemsPerPage)
+    })
+
+    pageBox.querySelector("span").firstElementChild.textContent = currentPage 
+    pageBox.querySelector("span").lastElementChild.textContent = pages
+
+    return paginatedItems
 }
 
 
