@@ -5,7 +5,8 @@ import { listen, deleteContent } from "./utils.js";
 // state 
 const todoList = new TodoList();
 let pages; 
-let currentPage = 1
+let currentPage = 1 
+let currentCategory = "tous"
 
 // DOM 
 const nameInput = document.getElementById("addNameInput")
@@ -18,6 +19,7 @@ const statBox = document.querySelector(".stats")
 const pageBox = document.querySelector(".pages")
 const leftChevron = document.querySelector(".fa-chevron-left")
 const rightChevron = document.querySelector(".fa-chevron-right")
+const select = document.querySelector("select")
 
 const app = {
     init() {
@@ -28,7 +30,8 @@ const app = {
         listen(ul, "click", app.removeTodo)
         listen(trash, "click", app.clearTodos)
         listen(leftChevron, "click", e => app.changePage("left"))
-        listen(rightChevron, "click", e => app.changePage("right"))
+        listen(rightChevron, "click", e => app.changePage("right")) 
+        listen(select, "change", app.filter)
 
         //procédures 
         app.load()
@@ -79,9 +82,17 @@ const app = {
     },
     refreshPage() {
         deleteContent(ul)
-        deleteContent(statBox)
-        renderUIStats(getStats())
-        renderUIList(paginate([...todoList.getList()].reverse()))
+        deleteContent(statBox) 
+        deleteContent(select)
+        renderUIStats(getStats()) 
+        let UIList;  
+        if( currentCategory !== "tous"){
+            UIList = todoList.getList().filter(item => item._category === currentCategory)
+        } else {
+            UIList = todoList.getList()
+        }
+        renderUIList(paginate([...UIList].reverse())) 
+        renderUISelectCat()
     },
     changePage(direction){
         if(direction === "left"){
@@ -91,6 +102,11 @@ const app = {
             if(currentPage === pages) return 
             currentPage++
         }
+        app.refreshPage()
+    },
+    filter(e){
+        resetUI() 
+        currentCategory = e.target.value 
         app.refreshPage()
     }
 }
@@ -122,6 +138,7 @@ const createItem = (id, name, category, date) => {
 
 const resetUI = () => {
     currentPage = 1
+    currentCategory = "tous"
     nameInput.value = ""
     categoryInput.value = ""
     submitInput.disabled = true
@@ -146,20 +163,6 @@ const buildUIItem = (item) => {
     ul.appendChild(li)
 }
 
-const getStats = () => {
-    const total = todoList.getListLength()
-    let aggregate; 
-    if(total > 0 ){
-        aggregate = todoList.getList().reduce((acc, curr) => {
-            const {_category} = curr 
-            acc[_category] = acc[_category] + 1 || 1
-            return acc 
-        }, {})
-    }
-
-    return {total, aggregate}
-}
-
 const renderUIStats = (stats) => {
     const totalDiv = document.createElement("div")
     totalDiv.innerHTML = `
@@ -176,6 +179,31 @@ const renderUIStats = (stats) => {
     }
 
     statBox.appendChild(aggregateDiv)
+} 
+
+const renderUISelectCat = () => {
+  const categories =  ["tous",...new Set(todoList.getList().map(item => item._category))]
+  categories.forEach(category => {
+    const option = document.createElement("option")  
+    option.value = category 
+    option.textContent = category 
+    option.selected = category === currentCategory 
+    select.appendChild(option)
+  })
+}
+
+const getStats = () => {
+    const total = todoList.getListLength()
+    let aggregate; 
+    if(total > 0 ){
+        aggregate = todoList.getList().reduce((acc, curr) => {
+            const {_category} = curr 
+            acc[_category] = acc[_category] + 1 || 1
+            return acc 
+        }, {})
+    }
+
+    return {total, aggregate}
 }
 
 const paginate = (list) => {
