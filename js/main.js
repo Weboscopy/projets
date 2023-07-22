@@ -1,12 +1,13 @@
 import TodoItem from "./TodoItem.js"
 import TodoList from "./TodoList.js"
-import { listen, deleteContent } from "./utils.js";
+import { listen, deleteContent, debounce } from "./utils.js";
 
 // state 
 const todoList = new TodoList();
 let pages; 
 let currentPage = 1 
-let currentCategory = "tous"
+let currentCategory = "tous" 
+let currentSearch = ""
 
 // DOM 
 const nameInput = document.getElementById("addNameInput")
@@ -20,6 +21,7 @@ const pageBox = document.querySelector(".pages")
 const leftChevron = document.querySelector(".fa-chevron-left")
 const rightChevron = document.querySelector(".fa-chevron-right")
 const select = document.querySelector("select")
+const searchInput = document.getElementById("search")
 
 const app = {
     init() {
@@ -32,6 +34,7 @@ const app = {
         listen(leftChevron, "click", e => app.changePage("left"))
         listen(rightChevron, "click", e => app.changePage("right")) 
         listen(select, "change", app.filter)
+        listen(searchInput, "input", debounce(app.search, 2000))
 
         //procédures 
         app.load()
@@ -85,13 +88,7 @@ const app = {
         deleteContent(statBox) 
         deleteContent(select)
         renderUIStats(getStats()) 
-        let UIList;  
-        if( currentCategory !== "tous"){
-            UIList = todoList.getList().filter(item => item._category === currentCategory)
-        } else {
-            UIList = todoList.getList()
-        }
-        renderUIList(paginate([...UIList].reverse())) 
+        renderUIList(paginate([...getUIList()].reverse())) 
         renderUISelectCat()
     },
     changePage(direction){
@@ -107,6 +104,11 @@ const app = {
     filter(e){
         resetUI() 
         currentCategory = e.target.value 
+        app.refreshPage()
+    }, 
+    search(e){
+        currentPage = 1 
+        currentSearch = e.target.value 
         app.refreshPage()
     }
 }
@@ -139,6 +141,7 @@ const createItem = (id, name, category, date) => {
 const resetUI = () => {
     currentPage = 1
     currentCategory = "tous"
+    currentSearch = ""
     nameInput.value = ""
     categoryInput.value = ""
     submitInput.disabled = true
@@ -204,6 +207,19 @@ const getStats = () => {
     }
 
     return {total, aggregate}
+}
+
+const getUIList = () => {
+    let UIList;  
+    if( currentCategory !== "tous"){
+        UIList = todoList.getList().filter(item => item._category === currentCategory)
+    } else {
+        UIList = todoList.getList()
+    } 
+    if(currentSearch !== ""){
+        UIList = UIList.filter(item => item._name.includes(currentSearch))
+    }
+    return UIList
 }
 
 const paginate = (list) => {
