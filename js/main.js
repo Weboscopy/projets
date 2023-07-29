@@ -144,6 +144,7 @@ const resetUI = () => {
     currentSearch = ""
     nameInput.value = ""
     categoryInput.value = ""
+    searchInput.value = ""
     submitInput.disabled = true
 }
 
