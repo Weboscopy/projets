@@ -1,58 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo App</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-</head>
-
-<body>
-    <header>
-        <h1>Todo App</h1>
-    </header>
-
-    <main>
-        <form>
-            <h3>Ajoouter un item</h3>
-            <input type="text" id="addNameInput" placeholder="nom">
-            <input type="text" id="addCategoryInput" placeholder="catégorie">
-            <input type="submit" id="submitInput" value="ajouter" disabled>
-        </form>
-
-        <section>
-            <aside class="stats">
-
-            </aside>
-            <aside class="options">
-                <label for="filter">Filtrer</label>
-                <select id="filter">
-
-                </select>
-                <Label for="search">Rechercher</Label>
-                <input type="text" id="search" placeholder="Rechercher un todo...">
-            </aside>
-        </section>
-
-        <div class="row">
-            <h2>Todos</h2> <i class="fas fa-trash"></i>
-        </div>
-        <hr>
-
-        <ul>
-
-        </ul>
-
-        <div class="pages">
-            <i class="fa-solid fa-chevron-left"></i>
-            <span> <b></b> - <b></b></span>
-            <i class="fa-solid fa-chevron-right"></i>
-        </div>
-    </main>
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flight Stats</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <form>
+      <h1>Flight Stats</h1>
+      <div>
+        <label for="file"><i class="fa-solid fa-file-import"></i></label>
+        <input type="file" id="file">
+        <input type="submit">
+      </div>
+      <img>
+    </form>
+  </body>
 </html>
