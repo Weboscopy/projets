@@ -1,4 +1,4 @@
-import { CSVReader } from "./Readers/CSVReader"
+import { FlightReader } from "./Readers/FlightReader"
 import img from "./assets/flight.svg"
 
 const initApp = () => {
@@ -24,8 +24,9 @@ const initApp = () => {
         }
     })
 
+    // lecture des données
     async function readFlights(file: File) : Promise<void> {
-      const flightReader =  new CSVReader(file)
+      const flightReader =  new FlightReader(file)
       try {
         await flightReader.read()
         console.log(flightReader.data)

@@ -1,9 +1,5 @@
-import { Flight, FlightStatus } from "../types";
-import { convertStringToDate } from "../utils";
-
-
-export class CSVReader {
-    data : Flight[] = []
+export abstract class CSVReader <T> {
+    data : T[] = []
     constructor(public file: File){}
 
     private load(file: File): Promise<string>{
@@ -29,18 +25,5 @@ export class CSVReader {
                         .map(this.convertRow)
     }
 
-    private convertRow(row: string[]): Flight {
-        if(row.length !== 6 || !(Object.values(FlightStatus).includes(row[5] as FlightStatus)) ){
-            throw new Error("Format de tableau invalide")
-        }
-
-        return [
-            convertStringToDate(row[0]),
-            row[1],
-            Number(row[2]),
-            Number(row[3]),
-            Number(row[4]),
-            row[5] as FlightStatus
-        ]
-    }
+    abstract convertRow(row: string[]): T 
 }
