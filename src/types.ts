@@ -7,3 +7,9 @@ export enum FlightStatus {
     Cancelled = "C", 
     Delayed = "D"
 }
+
+export interface Analyzer {
+    connexion : string 
+    flightList : Flight[]
+    run() : string[]
+}

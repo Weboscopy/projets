@@ -1,3 +1,5 @@
+import { AvgAnalyzer } from "./Analyzers/AvgAnalyzer"
+import { MinMaxAnalyzer } from "./Analyzers/MinMaxAnalyzer"
 import { FlightReader } from "./Readers/FlightReader"
 import img from "./assets/flight.svg"
 
@@ -29,7 +31,13 @@ const initApp = () => {
       const flightReader =  new FlightReader(file)
       try {
         await flightReader.read()
-        console.log(flightReader.data)
+        const flightList = flightReader.data
+
+        const avgAnalyzer = new AvgAnalyzer("Paris-Madrid", flightList)
+        const minMaxAnalyzer = new MinMaxAnalyzer("Paris-Madrid", flightList)
+
+        console.log(minMaxAnalyzer.run())
+
       } catch (error) {
         if(error instanceof Error){
             console.log(error.message)
