@@ -1,7 +1,9 @@
 import { AvgAnalyzer } from "./Analyzers/AvgAnalyzer"
 import { MinMaxAnalyzer } from "./Analyzers/MinMaxAnalyzer"
 import { HTMLPrinter } from "./Printers/HTMLPrinter"
+import { PDFPrinter } from "./Printers/PDFPrinter"
 import { FlightReader } from "./Readers/FlightReader"
+import { Report } from "./Report"
 import img from "./assets/flight.svg"
 
 const initApp = () => {
@@ -37,11 +39,15 @@ const initApp = () => {
         const avgAnalyzer = new AvgAnalyzer("Paris-Madrid", flightList)
         const minMaxAnalyzer = new MinMaxAnalyzer("Paris-Madrid", flightList)
 
-        const analysis = minMaxAnalyzer.run()
 
         const htmlPrinter = new HTMLPrinter("Paris-Madrid")
+        const pdfPrinter = new PDFPrinter("Paris-Madrid")
 
-        htmlPrinter.print(analysis)
+        const report1 = new Report(avgAnalyzer, htmlPrinter)
+        const report2 = new Report(minMaxAnalyzer, pdfPrinter)
+        report1.generate()
+        report2.generate()
+
 
       } catch (error) {
         if(error instanceof Error){
