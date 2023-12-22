@@ -2,6 +2,8 @@ import { Analyzer, Flight } from "../types";
 
 
 export class MinMaxAnalyzer implements Analyzer {
+    static description : string = "Min - Max"
+
 
     constructor(public connexion : string, public flightList : Flight[]){}
 

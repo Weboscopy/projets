@@ -2,6 +2,8 @@ import { Printer } from "../types";
 
 
 export class HTMLPrinter implements Printer {
+    static description : string = "Rapport au format HTML"
+
     constructor(public connexion : string){}
 
     private createHTMLContent(analysis : string[]) : string {

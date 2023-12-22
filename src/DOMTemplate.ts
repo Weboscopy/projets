@@ -1,3 +1,4 @@
+import { analyzerLookup, printerLookup } from "./main"
 import { Flight, FlightStatus } from "./types"
 
 
@@ -23,14 +24,17 @@ export class DOMTemplate {
         this.btn && this.btn.remove()
     }
 
-    renderTemplate(flightList : Flight[]){
+    renderTemplate(flightList : Flight[]) : HTMLSelectElement[]{
         this.clearTemplate()
         this.main = document.createElement("main")
         this.renderTable(flightList)
-        this.renderSelectConnexion(flightList)
+        const selectConnexion = this.renderSelectConnexion(flightList)
+        const selectAnalyzer = this.renderDynamicSelect(analyzerLookup)
+        const selectPrinter = this.renderDynamicSelect(printerLookup)
         this.renderDownloadBtn()
         document.body.appendChild(this.main)
         this.btn?.scrollIntoView({behavior: "smooth"})
+        return [selectConnexion, selectAnalyzer, selectPrinter]
     }
 
     private renderTable(flightList : Flight[]){
@@ -77,7 +81,7 @@ export class DOMTemplate {
         this.main?.appendChild(section)
     }
 
-    private renderSelectConnexion(flightList : Flight[]){
+    private renderSelectConnexion(flightList : Flight[]) : HTMLSelectElement{
         const selectConnexion = document.createElement("select")
         const connexions =   new Set( flightList.map(flight => flight[1]).sort())
         connexions.forEach(connexion => {
@@ -87,6 +91,20 @@ export class DOMTemplate {
             selectConnexion.appendChild(option)
         })
         this.main?.appendChild(selectConnexion)
+        return selectConnexion
+    }
+
+    private renderDynamicSelect<K extends string, T extends {description : string}>(lookup : Record<K , T>) : HTMLSelectElement{
+        const dynamicSelect = document.createElement("select")
+        for(const key in lookup){
+            const val = lookup[key]
+            const option = document.createElement("option")
+            option.value = key 
+            option.textContent = val.description
+            dynamicSelect.appendChild(option)
+        }
+        this.main?.appendChild(dynamicSelect)
+        return dynamicSelect
     }
 
     private renderDownloadBtn(){

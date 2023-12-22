@@ -3,6 +3,8 @@ import { Analyzer, Flight, FlightStatus } from "../types";
 
 export class AvgAnalyzer implements Analyzer {
 
+    static description : string = "Moyenne"
+
     constructor(public connexion : string, public flightList : Flight[]){}
 
     private avg(array: Flight[], col: 2 | 3 | 4) : number {
