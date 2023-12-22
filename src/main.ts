@@ -39,7 +39,7 @@ const initApp = () => {
         const flightList = flightReader.data
 
         // afficher la template 
-        DOMTemplate.instance.renderTemplate()
+        DOMTemplate.instance.renderTemplate(flightList)
 
         // const avgAnalyzer = new AvgAnalyzer("Paris-Madrid", flightList)
         // const minMaxAnalyzer = new MinMaxAnalyzer("Paris-Madrid", flightList)
