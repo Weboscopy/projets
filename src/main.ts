@@ -1,5 +1,6 @@
 import { AvgAnalyzer } from "./Analyzers/AvgAnalyzer"
 import { MinMaxAnalyzer } from "./Analyzers/MinMaxAnalyzer"
+import { DOMTemplate } from "./DOMTemplate"
 import { HTMLPrinter } from "./Printers/HTMLPrinter"
 import { PDFPrinter } from "./Printers/PDFPrinter"
 import { FlightReader } from "./Readers/FlightReader"
@@ -24,7 +25,8 @@ const initApp = () => {
           readFlights(file)
         } catch (error) {
             if(error instanceof Error){
-                console.log(error.message)
+                DOMTemplate.instance.renderAlert(error.message)
+                DOMTemplate.instance.clearTemplate()
             }
         }
     })
@@ -36,22 +38,23 @@ const initApp = () => {
         await flightReader.read()
         const flightList = flightReader.data
 
-        const avgAnalyzer = new AvgAnalyzer("Paris-Madrid", flightList)
-        const minMaxAnalyzer = new MinMaxAnalyzer("Paris-Madrid", flightList)
+        // afficher la template 
+        DOMTemplate.instance.renderTemplate()
 
-
-        const htmlPrinter = new HTMLPrinter("Paris-Madrid")
-        const pdfPrinter = new PDFPrinter("Paris-Madrid")
-
-        const report1 = new Report(avgAnalyzer, htmlPrinter)
-        const report2 = new Report(minMaxAnalyzer, pdfPrinter)
-        report1.generate()
-        report2.generate()
+        // const avgAnalyzer = new AvgAnalyzer("Paris-Madrid", flightList)
+        // const minMaxAnalyzer = new MinMaxAnalyzer("Paris-Madrid", flightList)
+        // const htmlPrinter = new HTMLPrinter("Paris-Madrid")
+        // const pdfPrinter = new PDFPrinter("Paris-Madrid")
+        // const report1 = new Report(avgAnalyzer, htmlPrinter)
+        // const report2 = new Report(minMaxAnalyzer, pdfPrinter)
+        // report1.generate()
+        // report2.generate()
 
 
       } catch (error) {
         if(error instanceof Error){
-            console.log(error.message)
+          DOMTemplate.instance.renderAlert(error.message)
+          DOMTemplate.instance.clearTemplate()
         }
       }
     }
