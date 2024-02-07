@@ -10,7 +10,7 @@ export class AvgAnalyzer implements Analyzer {
     private avg(array: Flight[], col: 2 | 3 | 4) : number {
         const sums = array.reduce((acc, curr) => {
             if(curr[1] === this.connexion){
-                acc.total = curr[col]
+                acc.total += curr[col]
                 acc.count++
             }  
             
